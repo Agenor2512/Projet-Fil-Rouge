@@ -52,7 +52,7 @@ Ce projet à pour objectif de nous donner le rôle d'un administrateur systèmes
 
 
 > Pour les machines qui bootent en EFI, lors de la configuration sur VirtualBox, il est important de cocher cette case : 
-> ![](https://s3.hedgedoc.org/hd1-demo/uploads/88e3058e-891a-437d-9f0e-38a387f69175.png)
+> ![](![activer_demarrage_EFI](https://github.com/user-attachments/assets/44d599cf-f202-44f5-919b-41a956bfe66b))
 [color=#6c3483]
 
 

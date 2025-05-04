@@ -1148,7 +1148,6 @@ S'il a réponse des deux serveurs respectif alors le tunnel à bien démarré au
 ## Proposition d'une solution plus sécurisée
 * Mise en place d'un VPN IPsec
 
- warning
 **IPsec** (Internet Protocol Security) est une **suite de protocoles** qui permet de **sécuriser** les communications entre **deux points sur un réseau**. IPsec **chiffre** et **authentifie** les données qui passent entre deux machines, créant ainsi un tunnel sécurisé. Cela empêche les pirates de lire ou modifier les données pendant leur transit.
 
 Un **VPN IPsec** permet donc de créer un tunnel sécurisé pour que deux réseaux ou ordinateurs puissent communiquer en toute sécurité, comme s’ils étaient sur le **même réseau local**.

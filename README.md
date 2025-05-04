@@ -1,6 +1,10 @@
 # Documentation Projet Fil Rouge 
 # TODO : 
 
+- GPO Redirection dossier
+- GPO Firefox
+- Résolution DNS LAMP1 depuis DC1
+
 Table des matières
 - [Introduction](#introduction)
 - [Configuration initiale des VMs sur VirtualBox](#configuration-initiale-des-vms-sur-virtualbox)

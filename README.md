@@ -3,18 +3,23 @@
 > [name=Noémie Vasseur]
 > [time=06 Mai 2025][color=purple]
 
+# TODO : 
+* Redirection dossier gpo
+* Publication firefox gpo
+* Dans LAMP1 -> Appliquer la résolution dns depuis DC1 vers LAMP1
+
 ## Table des matières
 
 [TOC]
 
-## Introduction
+# Introduction
 
 Ce projet consiste en une migration d'infrastructure pour l'entreprise Safeguard, exerçant dans le secteur de la cybersécurité. Il se déroule dans le cadre d'un projet fil rouge distribué par Dawan. 
 L'entreprise ayant subit une expansion rapide, elle souhaite migrer son infrastructure dans de nouveaux locaux plus modernes et un datacenter spécialement conçu pour héberger ses applications web critiques.
 
 Ce projet à pour objectif de nous donner le rôle d'un administrateur systèmes et réseaux. Il est donc important de veiller au bon déroulement de la migration et de faire les bons choix techniques pour assurer la fiabilité de l'infrastructure. Il faut respecter les choix du client tout en restant force de proposition. 
 
-## Configuration initiale des VMs sur VirtualBox
+# Configuration initiale des VMs sur VirtualBox
 * Infos VM **R1** - Ubuntu Server
 
 | CPU           | RAM           | Stockage      | Firmware      |Interface 1           |Interface 2             |
@@ -47,22 +52,22 @@ Ce projet à pour objectif de nous donner le rôle d'un administrateur systèmes
 
 
 > Pour les machines qui bootent en EFI, lors de la configuration sur VirtualBox, il est important de cocher cette case : 
-> ![](https://s3.hedgedoc.org/hd1-demo/uploads/d47f6f6c-b2bd-42af-b2c2-0c81e3f78a4e.png)
+> ![](https://s3.hedgedoc.org/hd1-demo/uploads/88e3058e-891a-437d-9f0e-38a387f69175.png)
 [color=#6c3483]
 
 
 
-## Installation de Ubuntu Server, Windows Server 2022, Debian 12
+# Installation de Ubuntu Server, Windows Server 2022, Debian 12
 * **Ubuntu Server (R1 et R2)**
 
 Pour l'installation des Ubuntu Server, il s'agit d'une installation classique sans particularité. Il faut surtout bien configurer les interfaces réseau comme suit : 
 
 > R1 - La configuration de la seconde interface se fera en post-installation.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/7329feb1-41c1-4e1a-bf73-443db74cb6e3.png)
+![](https://drive.google.com/file/d/17_yK8pVFGKjq1Simk8Lt34l0ljfsUjJP/view?usp=drive_link)
 [color=#6c3483]
 
 > R2 - La configuration de la seconde interface se fera en post-installation.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/27b429ae-b9fc-4748-88b9-47c7d293ca0d.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/ba0d5f25-f0aa-4f65-acea-8b7cf3d4a705.png)
 [color=#6c3483]
 
 On a besoin d'un serveur SSH, il faut donc penser à l'installer : 
@@ -72,11 +77,11 @@ On a besoin d'un serveur SSH, il faut donc penser à l'installer :
 Si l'installation s'est bien passée, on peut se connecter avec son login et mots de passe après le redémarrage.
 
 > R1
-![](https://s3.hedgedoc.org/hd1-demo/uploads/1faf7403-3ad5-492a-80b7-f89679868ba6.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/0fe2aff6-70ef-46cf-83ba-9d9490d9b8ba.png)
 [color=#6c3483]
 
 > R2
-![](https://s3.hedgedoc.org/hd1-demo/uploads/2081663d-f6f0-4897-9d3d-a30b672a7a85.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/58aa14a4-74ca-4088-aedf-d16d0b67f3d2.png)
 [color=#6c3483]
 
 Par la suite, on va pouvoir se connecter en **SSH** pour plus de praticité.
@@ -84,11 +89,11 @@ Par la suite, on va pouvoir se connecter en **SSH** pour plus de praticité.
 * **Windows Server 2022 (DC1 et DC2)**
 
 > Il faut faire attention à choisir l'expérience de bureau lors de l'installation.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/ecd32cc2-8d5e-446c-b394-b94b9323cb78.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/21cb2821-7e7e-4d28-a8ac-241a2a369c6c.png)
 [color=#6c3483]
 
 > et un type d'installation personnalisé puisque la première option, dans ce cas, est inutile.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/c15d078a-bb8b-4751-9d0f-2abe486dcd52.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/3cc37307-58d2-4ff0-8441-482e74630a92.png)
 [color=#6c3483]
 
 * **Debian 12**
@@ -96,20 +101,20 @@ Par la suite, on va pouvoir se connecter en **SSH** pour plus de praticité.
 Ici la partie importante durant l'installation est la partie stockage. Sur ce serveur il faut une installation standard avec LVM pour mettre en place un RAID1 par la suite : 
 
 > C'est à partir de cette étape qu'on choisit de partitionner les disques avec LVM.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/76b692a8-2e1c-4cc7-ad2a-0da7fd809874.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/d7e3ef6e-81a3-45dc-8d01-96a8c94056aa.png)
 [color=#6c3483]
 
 > Il faut choisir le premier disque à 34 GB.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/4e159e29-5e3f-437d-b330-8d267a61a59a.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/e4f88cb7-8acb-48b2-b4fa-9b71a388ea90.png)
 [color=#6c3483]
 
 >Comme il s'agit d'une installation classique avec LVM on choisit de tout mettre dans une seule partition.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/f5c5c1cb-7d8d-4ffc-95ad-4fd63991836d.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/7fc9c254-a2a1-4d2a-a3e2-d294d7aa3933.png)
 [color=#6c3483]
 
-## Configuration des machines
+# Configuration des machines
 
-### R1
+## R1
 
 --> Connexion à R1 en SSH
 
@@ -118,19 +123,19 @@ Le **SSH** est une connexion **sécurisée** qui fonctionne par paire de clés *
 La première étape est de configurer une redirection de port sur Virtualbox puisqu'on se situe sur un réseau **NAT** et qu'on veut faire communiquer la machine hôte et la machine virtuelle.
 
 > On se rend sur VirtualBox dans les Outils puis Réseau.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/662f7266-b976-4f79-970c-3b8dfd7eff15.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/68089bf2-b4ab-47f4-a78e-625262ee9a80.png)
 [color=#6c3483]
 
 > Puisque la redirection de port se fait par rapport au NAT, on se rend dans l'onglet NAT Networks.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/e75d95f4-733f-4e18-8f4a-f73b01a91e03.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/1df39a3b-6948-484e-b7fe-d2b976c1136f.png)
 [color=#6c3483]
 
 > Puis Redirection de ports, on ajoute une nouvelle règle.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/a7842b8d-2273-45de-a892-4b8a72759f3f.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/f0ad42a9-6b79-40e2-bcaf-80e1b9398d56.png)
 [color=#6c3483]
 
 > Elle doit être configurée comme suit : 
-![](https://s3.hedgedoc.org/hd1-demo/uploads/9914d658-0357-46a6-a035-501a77da8741.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/0dee73a2-51ba-4721-9391-6b0ce3d0de5c.png)
 [color=#6c3483]
 
 **2222** : C'est le port qu'on ouvre sur l'hôte pour laisser passer la connexion vers la machine virtuelles
@@ -222,7 +227,7 @@ subnet 192.168.100.0 netmask 255.255.255.0 {
 ```
 
 > Voici comment devrait être le contenu final.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/6f88c906-d4ca-498d-bb62-96f375eeda8d.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/995b1298-39c3-467a-800a-76f94e4c9d94.png)
 [color=#6c3483]
 
 Il est important de vérifier si la syntaxe est correcte avec la commande : 
@@ -230,10 +235,6 @@ Il est important de vérifier si la syntaxe est correcte avec la commande :
 ```
 sudo dhcpd -t
 ```
-
-> Résultat de la commande si tout est correct.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/b6bcf1e1-6818-416d-a924-bd61ad636070.png)
-[color=#6c3483]
 
 **b. Configurer la deuxième interface réseau avec Netplan**
 
@@ -275,7 +276,7 @@ Il reste encore à vérifier notre configuration et à activer la seconde interf
 ip addr show enp0s3
 ```
 > On peut voir la configuration de l'interface enp0s3.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/ad0990c3-cf68-438c-86d7-10622e2b30b5.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/dee721c3-8415-4145-a05d-020cd7e1c44f.png)
 [color=#6c3483]
 
 ``` console
@@ -283,27 +284,27 @@ sudo ip link set enp0s8 up
 ip addr show enp0s8
 ```
 > On peut voir la configuration de l'interface enp0s8
-![](https://s3.hedgedoc.org/hd1-demo/uploads/4b6393c2-94a3-4e33-824e-02665a8f438a.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/8a94ca82-3619-4ecf-bb3c-b981d29ceca8.png)
 [color=#6c3483]
 
-### DC1
+## DC1
 * Renommage de la machine et configuration de l'ip
 
 > On peut voir sur l'interface du gestionnaire de serveur que le nom de l'ordinateur est à rallonge et qu'il serait plus simple de le renommer
 > Il suffit de cliquer sur "WIN-KVMFUR312LR".
-![](https://s3.hedgedoc.org/hd1-demo/uploads/ff08a2f3-470a-4b16-a1dc-c3ec3651d1b6.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/64e84adb-1f1c-42a5-9ab3-f7d089588a09.png)
 [color=#6c3483]
 
 > Cette fenêtre s'ouvre, on accède à l'étape suivante en passant par le bouton "Modifier".
-![](https://s3.hedgedoc.org/hd1-demo/uploads/6f24eed3-f7b7-43a6-8ead-7ed006b41b8d.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/12c651a0-b3c9-49f7-86cc-2cfcb302a893.png)
 [color=#6c3483]
 
 > On choisit de l'appeler DC1, les modifications seront appliquées au démarrage.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/ef1afbc0-2857-41ce-8173-4ac20992b9f7.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/1f79cd54-f8c3-4be4-87a1-a7d0f8ef938d.png)
 [color=#6c3483]
 
 > On peut constater que le renommage à bien fonctionné.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/643012ff-864f-489a-b8f0-4e3bbb8f527b.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/47d03b9b-5a4e-4cb3-8290-acc05f54d2c7.png)
 [color=#6c3483]
 
 :::info
@@ -326,9 +327,9 @@ On définit l'IP statique qui est *192.168.100.250* ainsi que la passerelle par 
 ``` console
 New-NetIPAddress -InterfaceAlias "Ethernet" -IPAddress 192.168.100.250 -PrefixLenght 24 -DefaultGateway 192.168.100.254
 ```
-> On peut vérifier de nouveau la configuration avec *ipconfig*.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/4e76c894-c5a1-458b-be4c-e3abe4af23a7.png)
-[color=#6c3483]
+:::info
+On peut vérifier de nouveau la configuration avec *ipconfig*.
+:::
 
 On peut aussi désactiver l'IPV6, dans notre cas nous n'utiliserons que de l'IPV4 : 
 
@@ -343,40 +344,40 @@ Disable-NetAdapterBinding -Name "Ethernet" -ComponentID ms_tcpip6
 Lorsque Windows Server à redémarré, on peut se connecter avec le compte administrateur définit durant l'installation et accéder au gestionnaire de serveur.
 
 > Aller dans "Ajouter des rôles et fonctionnalités" puis suivre le reste des étapes.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/da653a61-2813-4dcb-943f-7d6cfd8b6cfe.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/b6fac420-da50-41dc-9673-82e378f38eac.png)
 [color=#6c3483]
 
-![](https://s3.hedgedoc.org/hd1-demo/uploads/cb036de6-8641-4896-9ef5-029b2c1e8b95.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/e6a8cecd-ea91-49f9-a546-e6f9b50d6289.png)
 
-![](https://s3.hedgedoc.org/hd1-demo/uploads/0fc8fd45-d456-431b-854f-f09e7c8d33ff.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/a896b95c-97e1-4f92-a288-1b22d0df6d51.png)
 
 > Il ne reste plus qu'à installer l'ADDS.
 > Si l'on veut que la machine redémarre automatiquement ci-besoin on peut cocher la case correspondante.
-![](https://s3.hedgedoc.org/hd1-demo/uploads/9dfd928e-491c-4132-93a3-9fe36300d582.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/f9315254-ca66-41cd-9ffd-31dca22bd1ba.png)
 [color=#6c3483]
 
 :::warning
-Après l'installation on constate qu'il y a encore une action à faire. En effet, un serveur ne peut pas avoir un Active Directory installé sans être un contrôleur de domaine. L'action demandée par le gestionnaire de serveur est donc de promouvoir DC1 en tant que Contrôleur de domaine. Mais avant, on doit encore installer le rôle de serveur DNS.
+Après l'installation on constate qu'il y a encore une action à faire. En effet, un serveur ne peut pas avoir un Active Directory installé sans être un contrôleur de domaine. L'action demandée par le gestionnaire de serveur est donc de promouvoir DC1 en tant que Contrôleur de domaine. Mais avant, on doit encore installer le rôle de serveur **DNS**.
 :::
 
 :::info
 Le **DNS** (Domain Name System) est un système qui permet de traduire les noms de domaine (exemple : google.com) en adresses IPs lisibles par les machines. Il existe aussi le DNS inversé qui traduit les IPs en noms de domaines. On en a besoin puisque notre serveur se trouve sur un domaine qui possède donc un nom de domaine qu'il faut pouvoir interpréter.
 :::
-Comme précédemment on ajoute une nouvelle fonctionnalité, on suit l'assistant et on trouve le rôle DNS : 
-
-![](https://s3.hedgedoc.org/hd1-demo/uploads/2594a76e-0e65-42d5-b3d1-e2ebc8b44df8.png)
+Comme précédemment on ajoute une nouvelle fonctionnalité, on suit l'assistant et on trouve le rôle DNS.
 
 Une fois le rôle installé, on va pouvoir promouvoir DC1 sans problème.
 
 > Passer par "Promouvoir ce serveur en contrôleur de domaine"
-![](https://s3.hedgedoc.org/hd1-demo/uploads/9b649dbc-6ed0-4b15-8c99-f56aba4560ab.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/e06a56d8-111e-418e-843c-cbb179111801.png)
 [color=#6c3483]
 
-![](https://s3.hedgedoc.org/hd1-demo/uploads/aed00193-ea03-4a03-b7fd-bc6bef541c42.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/1fa4dc57-09c1-4b9b-941d-c11668379401.png)
 
-![](https://s3.hedgedoc.org/hd1-demo/uploads/253736b3-cc1c-4f14-b3b0-7ed93a75e942.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/4f21f8b7-f587-42ea-8b12-2571b5aaf6c4.png)
 
-![](https://s3.hedgedoc.org/hd1-demo/uploads/4f3f4455-78c7-4142-99d0-f433e555b252.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/e09f467f-5a47-442a-8145-032de01c0cfc.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/2f1383a2-98e0-47dd-b042-53ebb1a0267c.png)
 
 A partir d'ici il suffit de passer aux étapes suivantes et de finir l'installation.
 
@@ -436,7 +437,7 @@ Avant de créer les groupes locaux, il est important de dire que nous sommes en 
 :::
 
 > *source : it-connect.fr*
-![](https://s3.hedgedoc.org/hd1-demo/uploads/29a1ff69-b843-4c61-932f-9b2bb4507262.png)
+![](https://s3.hedgedoc.org/hd1-demo/uploads/bf8581d2-8362-4e29-b046-7b74d0bff99f.png)
 [color=#6c3483]
 
 :::warning
@@ -453,7 +454,9 @@ New-ADGroup -Name "GL_Compta_RO" -GroupScope DomainLocal -Path "OU=Users,OU=SAFE
 
 Nous nous occuperons du côté partage sur DC2.
 
-### DC2
+## DC2
+
+Comme pour DC1, il faut renommer la machine et aussi configurer son ip.
 
 Le but du serveur DC2 est d'être un réplicat de DC1. Par conséquent, il faut l'ajouter au domaine : 
 
@@ -531,7 +534,7 @@ New-Item -Path "C:\DATA" -Name "Public" -ItemType "Directory"
 New-Item -Path "C:\DATA" -Name "Logiciels" -ItemType "Directory"
 ```
 
-Pour suivre la méthode AGDLP, il faut ajouter les groupes globaux aux groupes locaux : 
+Pour suivre la méthode **AGDLP**, il faut ajouter les groupes globaux aux groupes locaux : 
 
 ``` console
 Add-ADGroupMember -Identity "GL_Direction_RW" -Members "GG_Direction"
@@ -539,26 +542,725 @@ Add-ADGroupMember -Identity "GL_Compta_RW" -Members "GG_Compta"
 Add-ADGroupMember -Identity "GL_Compta_RO" -Members "GG_Compta"
 ```
 
-* Création et déploiement des GPOs
-    * Attribution un fond d'écran à tous les utilisateurs du domaine
-    * Publication de Firefox
-    * Verouillage de compte utilisateurs
-    * Montage un lecteur réseau
-    * Déploiement d'une imprimante TCP/IP
-    * Redirection du dossier Documents
-    * Activation du RDP
+Maintenant il faut s'occuper de partager les dossiers en appliquant les permissions NTFS et le partage avec le protocole SMB.
 
-### PC1
+:::warning
+**NTFS** (New Technology File System) est un **système de fichier** standard sous Windows. Sur un volume NTFS chaque dossier et fichier a **ses propres permissions**. Ces permissions consiste à définir **l'accès aux données** en lecture, écriture, modification, etc... 
+:::
+
+**Application des permissions NTFS et du partage sur Direction :** 
+
+> NTFS
+```console
+$acl = Get-Acl "C:\DATA\Direction"
+$rule1 = New-Object System.Security.AccessControl.FileSystemAccessRule("GL_Direction_RW", "Modify", "ContainerInherit,ObjectInherit", "None", "Allow")
+$rule2 = New-Object System.Security.AccessControl.FileSystemAccessRule("Admins du domaine", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow")
+$acl.AddAccessRule($rule1)
+$acl.AddAccessRule($rule2)
+Set-Acl "C:\DATA\Direction" $acl
+```
+> SMB
+```console
+New-SmbShare -Name "Direction" -Path "C:\DATA\Direction" -FullAccess "Admins du domaine" -ChangeAccess "GL_Direction_RW" -ReadAccess "Utilisateurs authentifiés"
+```
+
+**Application des permissions NTFS et du partage sur Compta :**
+
+```console
+$acl = Get-Acl "C:\DATA\Compta"
+$rule1 = New-Object System.Security.AccessControl.FileSystemAccessRule("GL_Compta_RW", "Modify", "ContainerInherit,ObjectInherit", "None", "Allow")
+$rule2 = New-Object System.Security.AccessControl.FileSystemAccessRule("Admins du domaine", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow")
+$rule3 = New-Object System.Security.AccessControl.FileSystemAccessRule("GL_Compta_RO", "Read", "ContainerInherit,ObjectInherit", "None", "Allow")
+$acl.SetAccessRule($rule1)
+$acl.AddAccessRule($rule2)
+$acl.AddAccessRule($rule3)
+Set-Acl "C:\DATA\Compta" $acl
+```
+
+```console
+New-SmbShare -Name "Compta" -Path "C:\DATA\Compta" -FullAccess "Admins du domaine" -ChangeAccess "GL_Compta_RW" -ReadAccess "GL_Compta_RO"
+```
+
+**Application des permissions NTFS et du partage sur Public :**
+
+```console
+$acl = Get-Acl "C:\DATA\Public"
+$rule1 = New-Object System.Security.AccessControl.FileSystemAccessRule("Tout le monde", "Modify", "ContainerInherit,ObjectInherit", "None", "Allow")
+$acl.SetAccessRule($rule1)
+Set-Acl "C:\DATA\Public" $acl
+```
+
+```console
+New-SmbShare -Name "Public" -Path "C:\DATA\Public" -FullAccess "Tout le monde"
+```
+
+**Application des permissions NTFS et du partage sur Logiciels :**
+
+```console
+$acl = Get-Acl "C:\DATA\Logiciels"
+$rule1 = New-Object System.Security.AccessControl.FileSystemAccessRule("Admins du domaine", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow")
+$rule2 = New-Object System.Security.AccessControl.FileSystemAccessRule("Utilisateurs du domaine", "Read", "ContainerInherit,ObjectInherit", "None", "Allow")
+$acl.SetAccessRule($rule1)
+$acl.AddAccessRule($rule2)
+Set-Acl "C:\DATA\Logiciels" $acl
+```
+
+```console
+New-SmbShare -Name "Logiciels" -Path "C:\DATA\Logiciels" -FullAccess "Admins du domaine" -ReadAccess "Utilisateurs du domaine"
+```
+
+* Création et déploiement des GPOs
+
+:::warning
+**GPO** (Group Policy Object), également appelées *Stratégies de groupes*. Les GPOs sont un ensemble de règle qui permettent de mettre en place des stratégies de sécurité. Ces stratégies sont paramétrées par **l'administrateur système** et sont appliquées ensuite à des postes de travail, des serveurs ou des utilisateurs.
+Les stratégies créées une **homogénéité** entre les machines mais aussi dans l'environnement des utilisateurs. On peut **appliquer** et **déployer** des **paramètres Windows**, par exemple, sur **toutes les sessions** des utilisateurs du domaine ou sur **un utilisateur en particulier** directement.
+Le point important est que les GPOs permettent aux administrateurs systèmes de gérer les règles de sécurités (pour les utilisateurs ou les ordinateurs) de façon **centralisée**.
+:::
+
+* Attribution d'un fond d'écran à tous les utilisateurs du domaine
+
+Le but de cette GPO est de généraliser le fond d'écran des utilisateurs. Ce qui veut dire qu'à chaque ouverture de session tous les utilisateurs du domaines auront le même fond d'écran.
+
+Voici le fond d'écran à utiliser : 
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/519db18e-9af5-486f-9f4d-3a1dab62c2fb.jpg)
+
+Il est nécessaire de créer la GPO via l'outil de gestion des stratégie de groupe : 
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/66dc8a00-3e4e-4155-ab1b-929952e1041f.png)
+
+> Outil de stratégies de groupe
+![](https://s3.hedgedoc.org/hd1-demo/uploads/6c9f27c3-2c87-4ad1-b4f5-04850b8f3623.png)
+[color=#6c3483]
+
+> Créer la GPO dans le domaine Safeguard
+![](https://s3.hedgedoc.org/hd1-demo/uploads/db37ee5f-944f-4725-a4a4-5607703f3aff.png)
+[color=#6c3483]
+
+> Donner un nom à la GPO
+![](https://s3.hedgedoc.org/hd1-demo/uploads/c074baba-e479-4c96-ace0-ab8e44e12234.png)
+[color=#6c3483]
+
+> La GPO est créée
+![](https://s3.hedgedoc.org/hd1-demo/uploads/797f823b-7481-4b52-bb0d-ed7745b25b0d.png)
+[color=#6c3483]
+
+> Mettre en place la GPO en passant par *Modifier*
+![](https://s3.hedgedoc.org/hd1-demo/uploads/1741eeea-e230-4945-a62f-e3b3641457d5.png)
+[color=#6c3483]
+
+> Double-cliquer sur "Papier peint du bureau"
+![](https://s3.hedgedoc.org/hd1-demo/uploads/b1d6f8c0-835e-41d8-9218-f2bf967e76de.png)
+[color=#6c3483]
+
+> Configurer le papier peint de bureau
+![](https://s3.hedgedoc.org/hd1-demo/uploads/1a7ecb84-a5f5-4dcd-a320-783d258d7ee2.png)
+[color=#6c3483]
+
+Il faut maintenant utiliser le dossier *DATA* précédemment créé et partagé. Nous allons créer un dossier, ici appelé *User* dans *DATA*. Il faut ensuite paramétrer les permissions NTFS sur ce dossier : 
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/e02a46f3-f10b-4b2c-a92c-89364417bbd5.png)
+
+Puis se rendre dans *Autorisation > Ajouter* : 
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/cddee9d3-fe32-4de6-8159-71e097ddd3ec.png)
+
+Voici ce qui devrait apparaître :
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/baa402f5-2106-4c14-9664-88f5aa897952.png)
+
+Il ne reste plus qu'à ajouter le fond d'écran dans le dossier *User* :
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/e632d909-f565-4852-b066-63a4d0feac21.png)
+
+* Publication de Firefox
+* Verouillage de compte utilisateurs
+
+L'utilité de créer une GPO de verrouillage de compte est d'empêcher un utilisateur mal intentionné de forcer l'ouverture d'une session en bloquant le compte au bout d'un certains nombre d'essaie de connexion.
+
+Comme précédemment il faut se rendre dans l'outil de gestion des stratégies de groupe et créer la GPO.
+Il faut la configurer comme suit : 
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/f676a3fe-4f04-4102-8e58-d17525a2d0a9.png)
+
+* Montage un lecteur réseau
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/740c676c-e716-44f7-811a-4e10154c2b44.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/58c1d152-b911-4544-a3cb-93dee4571b8a.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/9a12c901-9131-4c03-aff9-d6c5ecd287b5.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/5f1ffb0b-d7a5-4341-8606-b7d7dccb5359.png)
+
+* Déploiement d'une imprimante TCP/IP
+
+On souhaite déployer une imprimante TCP/IP, mais notre serveur n'a pas le rôle de serveur d'impression. Il faut donc l'installer, tout comme les rôles et fonctionnalités précédemment ajoutés.
+
+> Un redémarrage sera nécessaire.
+![](https://s3.hedgedoc.org/hd1-demo/uploads/147dc4c1-8085-49ad-a322-a78cec7a047c.png)
+
+Après l'installation et le redémarra, on doit ajouter un pilote pour l'imprimante pour pouvoir s'en servir. On se rend dans l'outil de Gestion de l'impression : 
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/2df9175f-c206-452c-a620-28e5f2835fad.png)
+
+Il suffit de suivre les étapes suivante :
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/2b982918-fdf9-411a-b6ad-fc7f4e366673.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/45eaf152-7d83-451e-82c6-e7d553b499a5.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/4622c7c8-9b28-4fc9-b4a5-fca9b7c1cee0.png)
+
+Désormais, il est nécessaire d'ouvrir un port dédié à l'imprimante, en suivant les étape ci-après :
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/f5c5dc5a-0c86-47c6-87ba-ad42048bc884.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/28c1a73b-552a-4ec5-be42-c6b60e7f99db.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/5772c96d-0490-4536-b35a-6e18f1aaf4a3.png)
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/ef14c3b4-27e9-487e-b6e3-1b4ab1f80ae3.png)
+
+Maintenant, il reste à ajouter l'imprimante en la reliant à son port et à son pilote dédié : 
+
+![](https://s3.hedgedoc.org/hd1-demo/uploads/fb78ec21-b8dc-4d95-8a25-4696f0473213.png)
+
+> Lier le port
+![](https://s3.hedgedoc.org/hd1-demo/uploads/dfdeb31c-7476-4593-9ec5-2554a6759dbe.png)
+[color=#6c3483]
+
+> Lier le pilote
+![](https://s3.hedgedoc.org/hd1-demo/uploads/75b49572-67d3-47e9-8d16-b251d25691e0.png)
+[color=#6c3483]
+
+> Nommer l'imprimante et la partager
+![](https://s3.hedgedoc.org/hd1-demo/uploads/a09c5c7a-5c38-4b9b-a059-4ea35e79a800.png)
+[color=#6c3483]
+
+> Il est possible de vérifier en imprimant une page de test.
+
+> On doit pouvoir retrouver l'imprimante dans le gestionnaire d'impression
+![](https://s3.hedgedoc.org/hd1-demo/uploads/eaac32e5-0431-4691-9f17-0e6a16e69e23.png)
+[color=#6c3483]
+
+La dernière étape est de lister l'imprimante dans l'annuaire pour y avoir accès.
+
+> Lister l'imprimante dans l'annuaire
+![](https://s3.hedgedoc.org/hd1-demo/uploads/6fd9c029-120a-4798-a322-bec4b584b054.png)
+[color=#6c3483]
+
+> Cocher la case *Lister dans l'annuaire*
+![](https://s3.hedgedoc.org/hd1-demo/uploads/aa9b656c-a501-4c79-ab16-1b8d89ab19cf.png)
+[color=#6c3483]
+
+> *Supprimer de l'annuaire* à dû s'ajouté dans la liste d'options
+![](https://s3.hedgedoc.org/hd1-demo/uploads/b36120ca-8253-4874-ba47-ffc814e11c66.png)
+[color=#6c3483]
+* Redirection du dossier Documents
+* Activation du RDP
+
+Créer la GPO en l'appelant Desktop_Remote.
+
+> Configurer l'autorisation popur l'ouverture de sessions à distance
+![](https://s3.hedgedoc.org/hd1-demo/uploads/0cae68a0-1c59-4447-9838-6221ca69bbf6.png)
+[color=#6c3483]
+
+> Cocher la case *Définir ces paramètres de stratégie* pour *Ajouter un utilisateur ou un groupe*
+![](https://s3.hedgedoc.org/hd1-demo/uploads/ca280acb-f561-4350-bf9c-97580c5ecae5.png)
+[color=#6c3483]
+
+> Taper *Admins du domaine*
+![](https://s3.hedgedoc.org/hd1-demo/uploads/4ab190d9-7a49-43b8-998b-9591b6d7a23a.png)
+[color=#6c3483]
+
+> *Appliquer* la configuration
+![](https://s3.hedgedoc.org/hd1-demo/uploads/5c64b7c4-7eaa-4be2-a69d-16c95d669da7.png)
+[color=#6c3483]
+
+L'ouverture de sessions à distance est désormais activée.
+
+## PC1
 * Connexion avec un utilisateur du domaine
 * Vérification du fonctionnement des GPOs
 
-### R2
+## R2
 * Configuration réseau
 
-### LAMP1
+## LAMP1
+* Se connecter en SSH
+
+Après l'installation de LAMP1 on peut remarquer que *sudo* n'est pas installé mais on va avoir besoin du rôle de super utilisateur pour faire certaines actions. 
+
+La première étape est de passer en mode administrateur : 
+
+``` sh
+su -
+```
+
+Puis installer *sudo* : 
+
+``` sh
+apt update
+apt install sudo
+```
+
+Il reste à ajouter l'utilisateur au groupe *sudoers* pour qu'il soit autorisé à utiliser la commande *sudo*. Pour ça, on peut passer par plusieurs méthodes : 
+
+> Méthode 1
+``` sh
+usermod -aG sudo lamp1 # Utilise usermod pour ajouter l'utilisateur au groupe sudo
+```
+
+> Méthode 2
+``` sh
+echo ' lamp1 ALL=(ALL)   ALL' >> /etc/sudoers # Ajoute la ligne ' lamp1 ALL=(ALL)   ALL' au fichier sudoers se situant dans /etc
+```
+On peut maintenant utiliser la commande *sudo*.
+
+::: info
+Nous pouvons nous connecter à LAMP1 en SSH comme pour R1 et R2 pour plus de simplicité et de lisibilité. Pour cela, il faudra d'abord se connecter à R2 en SSH, puis depuis R2, se connecter à LAMP1.
+:::
+
+Le service SSH n'étant pas installer il faut l'installer : 
+
+``` sh
+sudo apt update
+sudo apt install openssh-server # Installe openssh
+```
+
+> Vérifier que le service SSH est bien actif
+``` sh
+sudo systemctl status ssh
+```
+
+> S'assurer que le service se lancera à chaque démarrage
+``` sh
+sudo systemctl enable ssh
+sudo systemctl start ssh
+```
+
+Il faut encore ouvrir le port nécessaire pour pouvoir se connecter. Le port SSH par défaut est le port 22. On va utiliser l'outil *iptables*.
+
+::: warning
+**iptables** est un outil en ligne de commande utilisé pour configurer le pare-feu du noyau. Il permet de **contrôler le trafic réseau entrant, sortant ou traversant une machine**.
+:::
+
+``` sh
+sudo iptables -t nat -A PREROUTING -p tcp --dport 2224 -j DNAT --to-destination 192.168.200.11:22 # On définit le type de réseau, le protocole et la destination
+sudo iptables -A FORWARD -p tcp -d 192.168.200.11 --dport 22 -j ACCEPT # Autorise le paquet à passer par le port 22
+```
+
+> Sauvegarder les règles *iptables*
+``` sh
+sudo sh -c 'iptables-save > /etc/iptables/rules.v4' # Exporte les règles au format lisible par la machine vers le fichier rules.v4
+sudo iptables-restore < /etc/iptables/rules.v4 # Recharge les règles iptables à partir du fichier rules.v4
+```
+
+On peut désormais se connecter depuis R2 : 
+
+``` sh
+ssh lamp1@192.168.200.11
+```
+
+Comme pour R1 et R2, on peut faire en sorte de plus entrer de mot de passe à la connexion. 
+Cette fois il faudra générer une clé sur R2 : 
+
+``` sh
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
+
+Puis comme vu précédemment la copier, cette fois vers LAMP1.
+
 * Mise en place d'un RAID1
+
+:::warning
+Le **RAID** est un ensemble de technique de virtualisation de stockage qui permet de **répartir les données sur plusieurs disques** pour améliorer la fiabilité, la disponibilité, les performances et capacités de stockage.
+Il existe plusieurs types de RAID, ici nous allons mettre en place un **RAID1**.
+:::
+
+> Ce schéma montre qu'il faut un minimum de **deux disques** pour mettre en place un RAID1. Les données sont écrites sur **chacun des diques**. On peut perdre un maximum d'**un seul disque**. Les deux disques doivent avoir la **même capacités de stockage**.
+![](https://s3.hedgedoc.org/hd1-demo/uploads/e84eac55-667e-476f-a055-87a54a578d04.jpg)
+[color=#6c3483]
+
+Sur Debian, il existe un outil qui permet de créer des RAIDs qui s'appelle **mdadm**. C'est un package à installer : 
+
+``` console
+sudo apt install mdadm
+```
+
+Avant de commencer à utiliser **mdadm** il faut revoir la configuration des disques avec la commande : 
+
+``` console
+lsblk
+```
+
+Il faut créer le RAID1 à partir des deux disques de 50 GB créé dans la configuration initiale : 
+
+``` console
+sudo mdadm --create /dev/md0 --assume-clean --level=1 --raid-devices=2 /dev/sdb /dev/sdc
+```
+
+Ici les partitions se nomment *sdb* et *sdc*, mais il est possible que le système ait donné des intitulés différents.
+
+On peut vérifier la nouvelle configuration des disques : 
+
+> Sur cette capture, la configuration à été appliquée
+![](https://s3.hedgedoc.org/hd1-demo/uploads/ec35f1ea-3e59-4ad1-9e3f-1b01ff3d96c4.png)
+[color=#6c3483]
+
+Le format de fichier demandé par le client est l'**ext4**.
+
+:::warning
+**ext4** est un **système de fichier** principalement destiné aux distributions **GNU/Linux**. Il est le successeur de l'**ext3**.
+:::
+
+Il est possible de formatter les disques du RAID avec la commande **mkfs** :
+
+``` console
+sudo mkfs.ext4 /dev/md0
+```
+
+> Résultat de la commande **mkfs**
+![](https://s3.hedgedoc.org/hd1-demo/uploads/b451652d-26ec-44f5-b979-42a65d0a2654.png)
+[color=#6c3483]
+
+Maintenant, il faut *monter* les disques et configurer le montage automatique pour qu'ils soient "accessibles" à chaque démarrage : 
+
+``` console
+sudo mkdir /mnt/local1
+sudo mount /dev/md0 /mnt/local1 # Monter les disques
+echo '/dev/md0 /mnt/local1 ext4 defaults 0 2' | sudo tee -a /etc/fstab # Configurer le montage automatique
+```
+> Résultat des commandes précédentes
+![](https://s3.hedgedoc.org/hd1-demo/uploads/99b83123-3ab1-4111-9f22-9d86b10f7637.png)
+[color=#6c3483]
+
 * Création du répertoire *www*
-* Installation de la stack Apache2, MariaDB et PHP-FPM
-    --> Configuration Apache2
-    --> Configuration MariaDB
-    --> Configuration PHP-FPM
+
+On doit créer un répertoire nommé *www* (il se situera dans *local1*) qui accueillera la racine de chaque application web déployée sur le serveur.
+
+Il suffit de se servir de la commande **mkdir** : 
+
+``` console
+sudo mkdir /mnt/local1/www
+```
+
+> On voit que le fichier à bien été créé
+![](https://s3.hedgedoc.org/hd1-demo/uploads/023b0f49-356b-4287-9872-527ec600439c.png)
+[color=#6c3483]
+
+* Installation de la stack **LAMP** (Apache2, MariaDB et PHP-FPM)
+
+::: warning
+**LAMP** est l'acronyme de *Linux, Apache, MySQL/MariaDB et PHP*. C'est un **ensemble de technologies** permettant de créer des **applications web** performantes.
+:::
+
+``` sh
+sudo apt update
+sudo apt install apache2 mariadb-server php-fpm # Installer la stack
+sudo apt install ca-certificates lsb-release apt-transport-https # Ajoute des paquets pour l'ajout de dépôts, faire des connexions sécurisées et identifier la version du système
+sudo curl -sSL https://packages.sury.org/php/README.txt | sudo bash - # Récupère le paquet PHP-FPM depuis l'archive d'Ondrej Sury
+sudo apt install php8.3-fpm php8.3-mysql php8.3-cli php8.3-common php8.3-gd php8.3-xml php8.3-mbstring # Installe les dernières versions de PHP
+```
+
+* Déploiement de Wordpress
+
+::: warning
+**WordPress** est un système de gestion de contenu (ou **CMS** pour Content Management System). C’est un outil qui permet de **créer** et de **gérer**** facilement un site web. Une partie est **l'interface qui permet de gérer le site**, une autre est **le serveur qui met à disposition le site** et aussi une partie **dédiée au stockage des données du site**.
+:::
+
+Le but de déployer Wordpress est de le rendre disponible.
+    
+```sh
+cd /mnt/local1/www # Se rendre dans le dossier www
+sudo wget https://wordpress.org/latest.tar.gz # Récupérer la dernière version de Wordpress
+sudo tar -xvzf latest.tar.gz # Extraire l'archive
+sudo mv wordpress www.safeguard.lan # Bouger le dossier wordpress vers www.safeguard.lan
+```
+
+* Création de la base de données MariaDB
+
+::: warning
+**MariaDB** est un **SGBD** ou Système de Gestion de Bases de Données Relationelles. Comme son nom l'indique c'est un **système** permettant de **créer, organiser et gérer les données**.
+:::
+
+Pour stocker les données du site, Worpress va avoir besoin d'une base de données qui sera gérée via MariaDB.
+
+Il faut d'abord créer la base à l'aide d'un script **SQL** : 
+
+``` sql
+CREATE DATABASE wwwsafeguardlan CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'wwwadmin'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON wwwsafeguardlan.* TO 'wwwadmin'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
+```
+
+Puis la configurer en accédant à un fichier de config que l'on va renommer et modifier : 
+
+``` sh
+sudo cp /mnt/local1/www/www.safeguard.lan/wp-config-sample.php /mnt/local1/www/www.safeguard.lan/wp-config.php # Renommer le fichier 
+sudo nano /mnt/local1/www/www.safeguard.lan/wp-config.php # Ouvrir le fichier avec un editeur (ici nano)
+```
+
+> Voici à quoi devra ressembler le fichier de configuration
+![](https://s3.hedgedoc.org/hd1-demo/uploads/ce986b9b-0545-4e68-b711-6425ef9d3e57.png)
+[color=#6c3483]
+
+* Configuration Apache2
+
+::: warning
+**Apache2** est un **serveur** permettant d'**héberger des applications web**, notamment avec **PHP**.
+:::
+
+Pour configurer Apache2, il est nécessaire d'accéder au fichier de configuration : 
+
+``` sh
+sudo nano /etc/apache2/sites-available/www.safeguard.lan.conf
+```
+
+Il faut ajouter les lignes suivantes : 
+
+``` sh
+<VirtualHost *:80>
+    DocumentRoot /mnt/local1/www/www.safeguard.lan # Fichier racine
+    ServerName www.safeguard.lan # Nom du serveur
+
+    <Directory /mnt/local1/www/www.safeguard.lan>
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+```
+
+Il ne reste plus qu'à activer le site : 
+
+``` sh
+sudo a2ensite www.safeguard.lan.conf
+sudo a2enmod rewrite
+sudo systemctl restart apache2
+```
+
+* Appliquer la résolution DNS depuis DC1 vers LAMP1
+
+# Sécurité
+## Mise en place d'un tunnel GRE
+
+:::warning
+**GRE** (Generic Routing Encapsulation) est un **protocole** qui permet d'**encapsuler** tous les paquets dans leur **conception d'origine** dans la couche réseau.
+Mettre en place un tunnel GRE est le **minimum** de sécurité à appliquer.
+:::
+
+::: info
+Le but ici est de mettre en place un tunnel GRE entre R1 et R2 pour pouvoir faire communiquer les réseaux Datacenter et Campus.
+:::
+
+> Il faut installer le paquet *net-tools* qui permet de pouvoir gérer le sous-système réseau
+``` sh
+sudo apt install net-tools
+```
+
+``` bash
+sudo ip tunnel add gre1 mode gre local 10.72.56.10 remote 10.72.56.20 ttl 255 # On configure le tunnel en lui donnant un nom, le mode *gre* en précisant que le end-point local est le routeur R1 et celui qui est relié est R2
+sudo ip addr add 10.0.0.1/30 dev gre1 # Attribue l'adresse 10.0.0.1 comme point d'extrémité sur R1
+sudo ip link set gre1 up # Active l'interface du tunnel
+```
+
+``` sh
+sudo ip tunnel add gre1 mode gre local 10.72.56.20 remote 10.72.56.10 ttl 255 # On configure le tunnel en lui donnant un nom, le mode *gre* en précisant que le end-point local est le routeur R2 et celui qui est relié est R1
+sudo ip addr add 10.0.0.2/30 dev gre1 # Attribue l'adresse 10.0.0.2 comme point d'extrémité sur R2
+sudo ip link set gre1 up # Active l'interface du tunnel
+```
+
+``` sh
+sudo ip route add 192.168.200.0/24 via 10.0.0.2 dev gre1 # Etablit l'acheminement réseau vers Datacenter 
+```
+
+``` sh
+sudo ip route add 192.168.100.0/24 via 10.0.0.1 dev gre1 # Etablit l'acheminement réseau vers Campus
+```
+
+Notre tunnel GRE est mis en place. Le souci est qu'il ne sera pas actif automatiquement à chaque démarrage. Il faut donc créer un script sur chacun des routeurs et créer un service qui se lancera automatiquement à chaque démarrage de la machine.
+
+> Sur R1 et R2
+``` sh
+sudo nano /etc/network/if-up.d/gre-tunnel.sh # Création du fichier qui contiendra le script
+```
+
+> Script pour R1
+``` sh
+#!/bin/bash
+
+# Vérifie si le tunnel gre1 existe déjà
+if ip link show gre1 > /dev/null 2>&1; then
+    echo "Tunnel GRE déjà existant."
+    exit 0
+fi
+
+# Crée l'interface GRE
+ip tunnel add gre1 mode gre local 10.72.56.10 remote 10.72.56.20 ttl 255
+ip addr add 10.0.0.1/30 dev gre1
+ip link set gre1 up
+
+# Route vers le réseau de R2
+ip route add 192.168.200.0/24 via 10.0.0.2 dev gre1
+```
+
+> Script pour R2
+``` sh
+#!/bin/bash
+
+if ip link show gre1 > /dev/null 2>&1; then
+    echo "Tunnel GRE déjà existant."
+    exit 0
+fi
+
+ip tunnel add gre1 mode gre local 10.72.56.20 remote 10.72.56.10 ttl 255
+ip addr add 10.0.0.2/30 dev gre1
+ip link set gre1 up
+
+ip route add 192.168.100.0/24 via 10.0.0.1 dev gre1
+```
+
+> Sur R1 et R2
+``` sh
+sudo chmod +x /etc/network/if-up.d/gre-tunnel.sh # Rends le script exécutable
+```
+
+On va désormais passer à la création du service sur les deux machines.
+
+``` sh
+sudo nano /etc/rc.local # Création du fichier qui contiendra le script permettant de lancer le tunnel
+```
+
+> Contenu de *rc.local*
+``` sh
+#!/bin/bash
+bash /etc/network/if-up.d/gre-tunnel.sh & # Lance le tunnel GRE
+exit 0
+```
+
+``` sh
+sudo chmod +x /etc/rc.local # Rends le script exécutable
+```
+
+``` sh
+sudo nano /etc/systemd/system/rc-local.service # Créer le fichier de service systemd
+```
+
+> Contenu du fichier
+``` sh
+[Unit]
+Description=/etc/rc.local Compatibility
+ConditionPathExists=/etc/rc.local
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/etc/rc.local start
+TimeoutSec=0
+StandardOutput=tty
+RemainAfterExit=yes
+SysVStartPriority=99
+
+[Install]
+WantedBy=multi-user.target
+```
+
+``` sh
+sudo systemctl daemon-reload # Recharge les processus
+sudo systemctl enable rc-local # Rends actif rc-local 
+sudo systemctl start rc-local # Démarre rc-local
+sudo systemctl status rc-local # Vérifie son status
+```
+ Voilà, le servie est mis en place et devrait permettre de lancer le tunnel GRE automatiquement. Il est possible de vérifier après un redémarrage. 
+Sur R1 on peut essayer de joindre le serveur LAMP1 et sur R2 le serveur DC1 par exemple : 
+
+> Sur R1
+``` bash
+ping 192.168.200.11 # ip de LAMP1
+```
+
+> Sur R2
+``` bash
+ping 192.168.100.250 # ip de DC1
+```
+
+S'il a réponse des deux serveurs respectif alors le tunnel à bien démarré automatiquement.
+
+## Proposition d'une solution plus sécurisée
+* Mise en place d'un VPN IPsec
+
+::: warning
+**IPsec** (Internet Protocol Security) est une **suite de protocoles** qui permet de **sécuriser** les communications entre **deux points sur un réseau**. IPsec **chiffre** et **authentifie** les données qui passent entre deux machines, créant ainsi un tunnel sécurisé. Cela empêche les pirates de lire ou modifier les données pendant leur transit.
+
+Un **VPN IPsec** permet donc de créer un tunnel sécurisé pour que deux réseaux ou ordinateurs puissent communiquer en toute sécurité, comme s’ils étaient sur le **même réseau local**.
+:::
+
+On va d'abord intaller *strongswan*.
+
+::: info
+strongSwan est un **logiciel VPN**.
+:::
+
+``` sh
+sudo apt install strongswan # Installe strongswan
+```
+
+``` sh
+sudo nano /etc/ipsec.conf # Accède au ficher de configuration ipsec
+```
+
+> Sur R1, le contenu doit être celui-ci
+``` sh
+config setup
+    charondebug="ike 2, knl 2, cfg 2"
+    uniqueids = yes
+
+conn gre-ipsec
+    auto=start
+    left=10.72.56.10          
+    right=10.72.56.20          
+    type=transport
+    keyexchange=ikev2
+    authby=secret
+    esp=aes256-sha256-modp2048
+    ike=aes256-sha256-modp2048
+```
+
+> Sur R2, le contenu doit être celui-ci
+``` sh
+config setup
+    charondebug="ike 2, knl 2, cfg 2"
+    uniqueids = yes
+
+conn gre-ipsec
+    auto=start
+    left=10.72.56.20          
+    right=10.72.56.10          
+    type=transport
+    keyexchange=ikev2
+    authby=secret
+    esp=aes256-sha256-modp2048
+    ike=aes256-sha256-modp2048
+```
+
+``` sh
+sudo nano /etc/ipsec.secrets # Accède au fichier pour la configuration de l'authentification
+```
+
+``` sh
+10.72.56.10 10.72.56.20 : PSK "P@ssw0rd" # R1
+10.72.56.20 10.72.56.10 : PSK "P@ssw0rd" # R2
+```
+
+``` sh
+sudo systemctl restart strongswan-starter.service # Recharge le service de strongswan
+```
+
+``` sh
+sudo ipsec statusall # Vérifier le status du VPN IPsec
+```
+
+Notre tunnel VPN IPsec est mis en place, nos données vont pouvoir circuler en toute sécurité entre nos réseaux Datacenter et Campus.

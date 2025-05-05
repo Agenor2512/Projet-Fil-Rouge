@@ -87,7 +87,7 @@ Par la suite, on va pouvoir se connecter en **SSH** pour plus de praticité.
 ![install_wserv_1](https://github.com/user-attachments/assets/c11819a3-6d31-4886-9ea1-1ba9a62b2076)
 
 > et un type d'installation personnalisé puisque la première option, dans ce cas, est inutile.
-![install_wserv2](https://github.com/user-attachments/assets/289b7fdb-062d-43b6-84eb-f02310dc5600)
+![install_wserv_2](https://github.com/user-attachments/assets/8441e7c7-d71f-4953-95a1-c19726fd0157)
 
 * **Debian 12**
 
@@ -183,7 +183,7 @@ Pour installer le serveur DHCP :
 
 ``` console
 sudo apt update
-sudo apt install isc-dhcp-serve
+sudo apt install isc-dhcp-server
 ```
 
 Il faut ensuite éditer le fichier de configuration : 
@@ -206,7 +206,7 @@ min-lease-time 86400;
 ``` console
 subnet 192.168.100.0 netmask 255.255.255.0 {
     range 192.168.100.10 192.168.100.200;
-    option routers 192.168.100.1;
+    option routers 192.168.100.254;
     option broadcast-address 192.168.100.255; 
     option domain-name "safeguard.lan";
 }
@@ -334,8 +334,6 @@ Lorsque Windows Server à redémarré, on peut se connecter avec le compte admin
 
 
 Après l'installation on constate qu'il y a encore une action à faire. En effet, un serveur ne peut pas avoir un Active Directory installé sans être un contrôleur de domaine. L'action demandée par le gestionnaire de serveur est donc de promouvoir DC1 en tant que Contrôleur de domaine. Mais avant, on doit encore installer le rôle de serveur **DNS**.
-
-
 
 Le **DNS** (Domain Name System) est un système qui permet de traduire les noms de domaine (exemple : google.com) en adresses IPs lisibles par les machines. Il existe aussi le DNS inversé qui traduit les IPs en noms de domaines. On en a besoin puisque notre serveur se trouve sur un domaine qui possède donc un nom de domaine qu'il faut pouvoir interpréter.
 
@@ -476,16 +474,12 @@ Avant de passer à la suite, on peut ajouter DC2 en tant que DNS auxiliaire de D
 Add-DnsServerForwarder -IPAddress 192.168.100.251
 ```
 
-
 On ajoute DC2 comme DNS auxiliaire de DC1 pour créer plus de fiabilité. Si DC1 venait à avoir un souci de DNS alors DC2 pourrait prendre le relais. Cet incident serait non bloquant.
-
 
 * Services SMB et d'impression
     * SMB
 
-
 **SMB** (Server Message Block) est un protocole qui permet de partager des ressources dans un réseau local avec des machines sous Windows. Ce protocole va donc nous permettre de mettre en place un partage de fichier destinés aux différents utilisateurs du domaine. Ces partages seront soumis à différentes autorisations s'appliquant selon le rôle des différents utilisateurs (**Administrateur, Utilisateurs du domaine,** etc...) ou de leur groupe.
-
 
 Il y a plusieurs dossier qui seront partagés à créer : 
 - DATA
@@ -585,11 +579,9 @@ New-SmbShare -Name "Logiciels" -Path "C:\DATA\Logiciels" -FullAccess "Admins du 
 
 * Création et déploiement des GPOs
 
-
 **GPO** (Group Policy Object), également appelées *Stratégies de groupes*. Les GPOs sont un ensemble de règle qui permettent de mettre en place des stratégies de sécurité. Ces stratégies sont paramétrées par **l'administrateur système** et sont appliquées ensuite à des postes de travail, des serveurs ou des utilisateurs.
 Les stratégies créées une **homogénéité** entre les machines mais aussi dans l'environnement des utilisateurs. On peut **appliquer** et **déployer** des **paramètres Windows**, par exemple, sur **toutes les sessions** des utilisateurs du domaine ou sur **un utilisateur en particulier** directement.
 Le point important est que les GPOs permettent aux administrateurs systèmes de gérer les règles de sécurités (pour les utilisateurs ou les ordinateurs) de façon **centralisée**.
-
 
 * Attribution d'un fond d'écran à tous les utilisateurs du domaine
 
@@ -607,13 +599,12 @@ Il est nécessaire de créer la GPO via l'outil de gestion des stratégie de gro
 ![gestionnaire_strategie_de_groupe](https://github.com/user-attachments/assets/ac491bbd-0cc3-4e5c-8c81-f4dfbe2a78ed)
 
 > Créer la GPO dans le domaine Safeguard
-![creation_gpo_wallpaper_1](https://github.com/user-attachments/assets/3bafdc61-e5b6-4359-9a34-86c9d1854e57)
+![creation_gpo_wallpaper_1](https://github.com/user-attachments/assets/54f51b96-7a77-4671-aa9b-90f8f30a2e68)
 
 > Donner un nom à la GPO
 ![creation_gpo_wallpaper_2](https://github.com/user-attachments/assets/2511b28f-a662-43fd-9e8f-638451f53d0a)
 
 > La GPO est créée
-![gpo_wallpaper_creee](https://github.com/user-attachments/assets/dbddbd5c-120d-4a45-940c-7b9453e78b2b)
 
 > Mettre en place la GPO en passant par *Modifier*
 ![modification_gpo_wallpaper](https://github.com/user-attachments/assets/ddbd2bbd-54d6-4783-9f8e-6ee5f99d0ad7)
@@ -746,6 +737,8 @@ La dernière étape est de lister l'imprimante dans l'annuaire pour y avoir acc�
 ![gpo_redirection_4](https://github.com/user-attachments/assets/886bb4fe-8a8d-48a7-a671-2d87af7b9400)
 
 * Activation du RDP
+
+Activer l'ouverture de sessions à distance peut permettre de mieux administrer les sessions utilisateurs et de simplifier l'accès aux sessions par l'administrateur système.
 
 Créer la GPO en l'appelant Desktop_Remote.
 
@@ -1173,7 +1166,7 @@ exit 0
 ```
 
 ``` sh
-sudo chmod +x /etc/rc.local # Rends le script exécutable
+sudo chmod +x /etc/rc.local # Rend le script exécutable
 ```
 
 ``` sh
@@ -1201,7 +1194,7 @@ WantedBy=multi-user.target
 
 ``` sh
 sudo systemctl daemon-reload # Recharge les processus
-sudo systemctl enable rc-local # Rends actif rc-local 
+sudo systemctl enable rc-local # Rend actif rc-local 
 sudo systemctl start rc-local # Démarre rc-local
 sudo systemctl status rc-local # Vérifie son status
 ```
@@ -1293,4 +1286,4 @@ sudo systemctl restart strongswan-starter.service # Recharge le service de stron
 sudo ipsec statusall # Vérifier le status du VPN IPsec
 ```
 
-Notre tunnel VPN IPsec est mis en place, nos données vont pouvoir circuler en toute sécurité entre nos réseaux Datacenter et Campus.
+Notre tunnel VPN IPsec est mis en place, nos données vont pouvoir circuler en toute sécurité entre nos réseaux *Datacenter* et *Campus*.

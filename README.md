@@ -1,9 +1,4 @@
 # Documentation Projet Fil Rouge 
-# TODO : 
-
-- GPO Redirection dossier
-- GPO Firefox
-- Résolution DNS LAMP1 depuis DC1
 
 Table des matières
 - [Introduction](#introduction)
@@ -646,6 +641,18 @@ Il ne reste plus qu'à ajouter le fond d'écran dans le dossier *User* :
 ![ajout_fond_ecran_dossier_user](https://github.com/user-attachments/assets/3be48030-b9d2-4344-8d05-e2f5d972a436)
 
 * Publication de Firefox
+
+Cette GPO vise à installer automatiquement Firefox sur les postes utilisateurs.
+
+> Script de démarrage configuré : \\dc2\GPO\firefox.msi
+> Paramètre : Configuration ordinateur > Paramètres Windows > Scripts (Démarrage/Arrêt)
+
+![gpo_firefox_1](https://github.com/user-attachments/assets/a455141e-64eb-4fa6-b04e-4284549c014b)
+
+![gpo_firefox_2](https://github.com/user-attachments/assets/60b64ec6-de10-4758-88f1-e66192cfe15e)
+
+![gpo_firefox_3](https://github.com/user-attachments/assets/1518dc93-410f-43ad-b25e-413bbac89d3f)
+
 * Verouillage de compte utilisateurs
 
 L'utilité de créer une GPO de verrouillage de compte est d'empêcher un utilisateur mal intentionné de forcer l'ouverture d'une session en bloquant le compte au bout d'un certains nombre d'essaie de connexion.
@@ -724,6 +731,20 @@ La dernière étape est de lister l'imprimante dans l'annuaire pour y avoir acc�
 ![supprimer_de_lannuaire_sest_ajoute_gestion_impression](https://github.com/user-attachments/assets/dfcf040f-248f-4ef4-b972-67916954f02b)
 
 * Redirection du dossier Documents
+
+ Cette GPO va permettre de rediriger le dossier *Documents* vers un répertoire personnel destiné à l'utilisateur.
+ On créé donc la GPO Redirection_Files. 
+
+ Puis on la modifie et on la configure : 
+
+ ![gpo_redirection_1](https://github.com/user-attachments/assets/5298238f-29fe-4fc7-86ec-57d13470d000)
+
+ ![gpo_redirection_2](https://github.com/user-attachments/assets/045ee219-0726-440f-915d-21e1caaa5257)
+
+![gpo_redirection_3](https://github.com/user-attachments/assets/10cb3961-56fd-423f-8815-7a90cb243192)
+
+![gpo_redirection_4](https://github.com/user-attachments/assets/886bb4fe-8a8d-48a7-a671-2d87af7b9400)
+
 * Activation du RDP
 
 Créer la GPO en l'appelant Desktop_Remote.
@@ -743,11 +764,59 @@ Créer la GPO en l'appelant Desktop_Remote.
 L'ouverture de sessions à distance est désormais activée.
 
 ## PC1
+* Relier PC1 au domaine
+
+Pour que les GPOs s'appliquent sur PC1, il doit bien sûr faire partie du domaine.
+Se rendre dans **Paramètres > Système > A propos de > Propriétés du système > Modifier** : 
+
+![relier_PC1_domaine_1](https://github.com/user-attachments/assets/dfb8dcef-aea3-46ce-976e-51219d40ca4d)
+
+> Utiliser le compte Administrateur : SAFEGUARD\Administrateur et son mot de passe
+![relier_PC1_domaine_2](https://github.com/user-attachments/assets/80a91c7c-93c3-4ecd-ae5d-eaa0c4f860f6)
+
+> PC1 à bient été ajouté au domaine
+![relier_PC1_domaine_3](https://github.com/user-attachments/assets/b739caff-bdb9-4523-b9ae-82f0c9ba0276)
+
+Il ne reste plus qu'à effectuer un redémarrage.
+
 * Connexion avec un utilisateur du domaine
+
+On peut se connecter avec un autre utilisateur, par exemple : igauthier@safeguard.lan pour vérifier l'application des GPOs.
+
+![connexion_gauthier_PC1](https://github.com/user-attachments/assets/56776567-f701-40dc-98b7-3a992eb84098)
+
 * Vérification du fonctionnement des GPOs
+
+![gpo_wallpaper_ok](https://github.com/user-attachments/assets/0f7ff849-a32d-486c-a7aa-192bb6036020)
+
+![gpo_firefox _ok](https://github.com/user-attachments/assets/03239176-5445-486f-a81d-acefcbb94bc2)
+
+![gpo_imprimante_ok](https://github.com/user-attachments/assets/92631972-6b5d-4f4c-bf7c-ac1e45f47b9b)
+
+![gpo_lecteur_ok](https://github.com/user-attachments/assets/349b7c3b-8264-49a4-bff6-98ca28d6aa5d)
+
+![gpo_redirection_ok](https://github.com/user-attachments/assets/92718d4f-9861-4bdd-a1ca-523e03eece99)
 
 ## R2
 * Configuration réseau
+
+Comme pour R1, il faut installer isc-dhcp-server et accéder au fichier de configuration DHCP. En voici le contenu : 
+
+``` bash
+option domain-name "safeguard.lan";
+default-lease-time 86400;
+max-lease-time 86400;
+min-lease-time 86400;
+
+subnet 192.168.200.0 netmask 255.255.255.0 {
+    range 192.168.200.10 192.168.200.200;
+    option routers 192.168.200.254;
+    option broadcast-address 192.168.200.255;
+    option domain-name "safeguard.lan";
+}
+```
+
+Et enfin, exactement comme pour R1, on doit configurer et activer la deuxième interface réseau.
 
 ## LAMP1
 * Se connecter en SSH
@@ -998,7 +1067,13 @@ sudo a2enmod rewrite
 sudo systemctl restart apache2
 ```
 
-* Appliquer la résolution DNS depuis DC1 vers LAMP1
+* Appliquer la résolution DNS depuis DC1 vers LAMP1 pour accéder à *www*
+
+Il faut se rendre sur DC1 puis **Outils > DNS**.
+
+![resolution_dns_lamp1_1](https://github.com/user-attachments/assets/26fd54ba-d4ae-4a1e-a323-de9089e00bd1)
+
+![resolution_dns_lamp1_2](https://github.com/user-attachments/assets/30797b57-aec3-4677-b3df-44fb70d1196e)
 
 # Sécurité
 ## Mise en place d'un tunnel GRE
